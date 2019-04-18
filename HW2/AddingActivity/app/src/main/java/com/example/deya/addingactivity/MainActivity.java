@@ -3,6 +3,7 @@ package com.example.deya.addingactivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,10 +11,18 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TOTAL_COUNT = "total_count";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            Log.d(TAG, "onCreate() Restoring previous state");
+            /* restore state */
+        } else {
+            Log.d(TAG, "onCreate() No saved state available");
+            /* initialize app */
+        }
         setContentView(R.layout.activity_main);
     }
 
@@ -32,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
         TextView showCountTextView = (TextView) findViewById(R.id.numberIn);
         String countString = showCountTextView.getText().toString();
         int count = Integer.parseInt(countString);
-        intent.putExtra(TOTAL_COUNT, countString);
+        count++;
+        intent.putExtra(TOTAL_COUNT, count);
         startActivity(intent);
     }
 

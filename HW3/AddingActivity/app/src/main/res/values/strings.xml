@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AddingActivity</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="author_name">Deyanira Taupier</string>
+    <string name="interests">"Let's make the world a better place more than they do."</string>
+    <string name="directions">Enter a number: </string>
+    <string name="try_button">Try it!</string>
+    <string name="surprise">It\'s not safe to go on without this: </string>
+    <string name="luck">+1 for good luck.</string>
+</resources>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#66F1AD81"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/scoop_in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_margin="@dimen/view_margin"
+        android:fontFamily="@font/slackey"
+        android:hint="@string/scoop_qty"
+        android:inputType="number"
+        android:textColor="@color/colorAccent" />
+
+    <Spinner
+        android:id="@+id/scoop_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_margin="@dimen/view_margin"
+        android:entries="@array/scoop_type_array"
+        android:textColor="@color/colorAccent"></Spinner>
+
+
+    <EditText
+        android:id="@+id/eat_in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/view_margin"
+        android:fontFamily="@font/slackey"
+        android:hint="@string/eat_qty"
+        android:inputType="number"
+        android:textColor="@color/colorAccent" />
+
+    <Button
+        android:id="@+id/scoop_it_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/view_margin"
+        android:fontFamily="@font/jacques_francois_shadow"
+        android:onClick="onClick"
+        android:text="@string/scoop"
+        android:textColor="@color/colorAccent" />
+
+    <TextView
+        android:id="@+id/plated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/view_margin"
+        android:fontFamily="@font/nosifer"
+        android:lineSpacingExtra="8sp"
+        android:longClickable="false"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

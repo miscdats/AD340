@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Too Much Tuna</string>
+    <string name="tuna">Tuna</string>
+    <string name="scoop_qty">Add to plate how many scoops?</string>
+    <string name="too_much">TOO MUCH TUNA!!!!!!</string>
+    <string name="eat_qty">Take off plate to eat how many?</string>
+    <string name="scoop">Scoop it up!</string>
+    <string name="eat">Eat</string>
+    <string-array name="scoop_type_array">
+        <item>Tuna</item>
+        <item>Nothing</item>
+        <item>MORE Tuna</item>
+    </string-array>
+    <string name="default_cap">6</string>
+    <string name="default_type">Tuna</string>
+    <string name="default_scoop_qty">50</string>
+    <string name="default_eat_qty">45</string>
+    <string name="default_plate">5 tuna on the plate.</string>
+
+</resources>

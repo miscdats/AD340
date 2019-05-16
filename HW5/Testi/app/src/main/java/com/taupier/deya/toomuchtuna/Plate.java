@@ -32,7 +32,7 @@ public class Plate {
      * Constructor for test purposes.
      * @param context
      */
-    public Plate(Context context) {
+    Plate(Context context) {
         setScoopCap(Integer.parseInt(context.getString(R.string.default_cap)));
         setScoopType(context.getString(R.string.default_type));
         plateScoops(context.getString(R.string.default_scoop_qty),
@@ -75,12 +75,12 @@ public class Plate {
         else return false;
     }
 
-    private void eat(int scoops, int bites) {
+    void eat(int scoops, int bites) {
             int scooped = scoops - bites;
             setScoopsPlated(scooped);
     }
 
-    private static boolean isInteger(String s) {
+    boolean isInteger(String s) {
         for (int a = 0 ; a < s.length(); a ++) {
             if( a == 0 && s.charAt(a) == '-') continue;
             if( !Character.isDigit(s.charAt(a)) ) return false;

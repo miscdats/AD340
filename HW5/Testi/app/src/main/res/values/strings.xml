@@ -16,5 +16,6 @@
     <string name="default_scoop_qty">50</string>
     <string name="default_eat_qty">45</string>
     <string name="default_plate">5 tuna on the plate.</string>
+    <string name="empty"></string>
 
 </resources>

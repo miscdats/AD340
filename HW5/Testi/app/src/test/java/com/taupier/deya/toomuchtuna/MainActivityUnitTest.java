@@ -2,61 +2,57 @@ package com.taupier.deya.toomuchtuna;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.widget.EditText;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowToast;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class MainActivityUnitTest {
-    @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
-    }
+    private static final String FAKE_PLATE = "5 tuna on the plate.";
 
     @Mock
-    Context mockContext;
+    private Context mockContext;
 
     @Mock
-    Resources mockResources;
+    private Resources mockResources;
 
     @Mock
-    Plate defaultPlate;
+    private Plate defaultPlate;
+
+    @Mock
+    MainActivity act;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        when(mockContext.getString(R.string.default_plate))
-                .thenReturn("5 tuna on the plate.");
-        when(mockContext.getResources()).thenReturn(mockResources);
-
-
+        this.act = Robolectric.setupActivity(MainActivity.class);
         this.defaultPlate = new Plate(mockContext);
     }
 
     @Test
-    public void checkInputEmpty() {
-        String empty = "";
-
-
+    public void onClick_BadInput() {
+        act.findViewById(R.id.scoop_it_btn).performClick();
+        assertEquals("Can't do something with nothing.\nWhere's the tuna?",
+                ShadowToast.getTextOfLatestToast());
     }
 
     @Test
-    public void checkNothingSelection() {
-    }
-
-    @Test
-    public void displayPlate() {
+    public void onClick_GoodInput() {
+        ((EditText) act.findViewById(R.id.eat_in)).setText(50);
+        ((EditText) act.findViewById(R.id.scoop_in)).setText(45);
+        act.findViewById(R.id.scoop_it_btn).performClick();
+        assertEquals("5 tuna on the plate.",
+                act.findViewById(R.id.plated));
     }
 }

@@ -29,32 +29,14 @@ public class MainActivity extends AppCompatActivity {
         EditText eatIn = (EditText) findViewById(R.id.eat_in);
         String eatQty = eatIn.getText().toString();
 
-        boolean nothingSelected = checkNothingSelection(scoopType);
-        boolean noScoop = checkInputEmpty(scoopQty);
-        boolean noEats = checkInputEmpty(eatQty);
-
-        if (noScoop == false && noEats == false && nothingSelected == false) {
+        if (scoopQty != "" && eatQty != "" && !scoopType.equals("Nothing")) {
             Plate plate = new Plate(scoopQty, eatQty, scoopType);
             displayPlate(plateView, plate);
         } else {
-            Toast.makeText(this, "Where's the tuna?", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,
+                    "Can't do something with nothing.\nWhere's the tuna?",
+                    Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public boolean checkInputEmpty(String string) {
-        if (string.isEmpty()) {
-            return true;
-        } else return false;
-    }
-
-    public boolean checkNothingSelection(String string) {
-        if (string.equals("Nothing")) {
-            Toast.makeText(
-                    this,
-                    "Can't do anything with nothing. Please select variety of tuna.",
-                    Toast.LENGTH_LONG).show();
-            return true;
-        } else return false;
     }
 
     public void displayPlate(TextView textview, Plate plate) {

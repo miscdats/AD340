@@ -1,5 +1,9 @@
 package com.example.deya.seawatch;
 
+import android.widget.TextView;
+
+import static com.example.deya.seawatch.MainActivity.context;
+
 public class TrafficCamera {
 
     private double latitude;
@@ -30,6 +34,12 @@ public class TrafficCamera {
         } else if (type.equals("wsdot")) {
             this.imageUrl = WSDOTBaseUrl + imageUrl;
         }
+    }
+
+    public void viewCoordinatesString(TextView textLocation) {
+        String coordinatesString = context.getResources().getString(R.string.located_at);
+        coordinatesString = String.format(coordinatesString, getLatitude(), getLongitude());
+        textLocation.setText(coordinatesString);
     }
 
     public String getImageUrl() {

@@ -41,15 +41,13 @@ public class SDOTCameraAdapter extends RecyclerView.Adapter<SDOTCameraAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int pos) {
         CardView cardView = viewHolder.layout;
-        Context context = cardView.getContext();
+        final Context context = cardView.getContext();
 
-        TextView cameraCoordinates = (TextView)cardView.findViewById(R.id.text_results);
-        ImageView imageView = (ImageView)cardView.findViewById(R.id.image_cam_view);
+        TextView cameraInfo = (TextView)cardView.findViewById(R.id.text_results);
+        ImageView imageView = (ImageView)cardView.findViewById(R.id.image_camera);
 
-        TrafficCamera trafficCamera = trafficCameras[pos];
-        cameraCoordinates.setText("Located at: \n" +
-                trafficCamera.getLatitude() + ", \n " +
-                trafficCamera.getLongitude());
+        final TrafficCamera trafficCamera = trafficCameras[pos];
+        cameraInfo.setText(trafficCamera.getDescription());
 
         Picasso.get().load(trafficCamera.getImageUrl()).into(imageView);
         cardView.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +55,7 @@ public class SDOTCameraAdapter extends RecyclerView.Adapter<SDOTCameraAdapter.Vi
             public void onClick(View view) {
                 if (listener != null) {
                     listener.onClick(pos);
+                    trafficCamera.viewCoordinatesString(MainActivity.getTextLocation());
                 }
             }
         });

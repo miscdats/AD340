@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         LoaderManager.LoaderCallbacks<String> {
 
     private static final String TAG = "MAIN_ACTIVITY : ";
-    TextView textResults;
-
+    static TextView textLocation;
+    static Context context;
     private SDOTCameraAdapter cameraAdapter;
 
     @Override
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textResults = findViewById(R.id.text_results);
+        textLocation = (TextView)findViewById(R.id.text_location);
         Button button = findViewById(R.id.btn_data_get);
         button.setOnClickListener(this);
     }
@@ -67,20 +67,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @NonNull
     @Override
     public Loader<String> onCreateLoader(int i, @Nullable Bundle bundle) {
-        String queryString = "";
-        if (bundle != null) {
-            queryString = bundle.getString("queryString");
-        }
-        return new SeattleCamerasAsyncTaskLoader(this, queryString);
+//        String queryString = "";
+//        if (bundle != null) {
+//            queryString = bundle.getString("queryString");
+//        }
+//        the above code used if querying something specific!
+        return new SeattleCamerasAsyncTaskLoader(this, "");
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<String> loader, String s) {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_data_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
-
         try {
             // the JSON object itself
             JSONObject rootObject = new JSONObject(s);
@@ -96,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 double longitude = coordinates.getDouble(1);
 
                 JSONArray cameras = current.getJSONArray("Cameras");
-                JSONObject camera  = cameras.getJSONObject(0);
+                JSONObject camera = cameras.getJSONObject(0);
 
                 String id = camera.getString("Id");
                 String description = camera.getString("Description");
@@ -105,11 +101,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 TrafficCamera trafficCamera = new TrafficCamera(latitude, longitude, id, description, imageUrl, type);
                 trafficCameras[i] = trafficCamera;
-
-                // lay it all out in recycler view
-                cameraAdapter = new SDOTCameraAdapter(trafficCameras);
-                recyclerView.setAdapter(cameraAdapter);
             }
+
+            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_data_view);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(linearLayoutManager);
+            // lay it all out in recycler view
+            cameraAdapter = new SDOTCameraAdapter(trafficCameras);
+            recyclerView.setAdapter(cameraAdapter);
+
         } catch (Exception e) {
             Log.e(TAG, e.getLocalizedMessage());
         }
@@ -120,4 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    public static TextView getTextLocation() {
+        return textLocation;
+    }
 }

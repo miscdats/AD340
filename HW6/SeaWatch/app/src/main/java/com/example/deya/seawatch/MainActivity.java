@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             JSONArray features = rootObject.getJSONArray("Features");
 
             // create list of all data in object
-            TrafficCamera[] trafficCameras = new TrafficCamera[features.length()];
+            final TrafficCamera[] trafficCameras = new TrafficCamera[features.length()];
             for (int i = 0; i < features.length(); i++) {
                 JSONObject current = features.getJSONObject(i);
 
@@ -103,13 +103,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 trafficCameras[i] = trafficCamera;
             }
 
-            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_data_view);
+            final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_data_view);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(linearLayoutManager);
             // lay it all out in recycler view
             cameraAdapter = new SDOTCameraAdapter(trafficCameras);
             recyclerView.setAdapter(cameraAdapter);
+
+            // click on item shows coordinates
+            cameraAdapter.setOnItemClickListener(new SDOTCameraAdapter.ClickListener() {
+                @Override
+                public void onItemClick(int pos, View view) {
+                    trafficCameras[recyclerView.getChildAdapterPosition(view)]
+                            .viewCoordinatesString(textLocation);
+                }
+            });
+
+            // long click on item sends position to log
+            cameraAdapter.setOnLongItemClickListener(new SDOTCameraAdapter.LongClickListener() {
+                @Override
+                public void onItemLongClick(int position, View v) {
+                    Log.d(TAG, "onItemLongClick pos = " + position);
+                }
+            });
 
         } catch (Exception e) {
             Log.e(TAG, e.getLocalizedMessage());
@@ -124,4 +141,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static TextView getTextLocation() {
         return textLocation;
     }
+
 }

@@ -32,8 +32,8 @@
             android:layout_height="150dp"
             android:layout_alignBottom="@+id/text_results"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="0dp"
-            android:layout_marginBottom="-2dp"
+            android:layout_marginEnd="@dimen/lil_marge"
+            android:layout_marginBottom="@dimen/lil_marge"
             android:cropToPadding="false" />
 
     </RelativeLayout>

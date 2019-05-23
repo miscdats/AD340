@@ -24,7 +24,9 @@ public class SDOTCameraAdapter extends RecyclerView.Adapter<SDOTCameraAdapter.Vi
     private String SDOTBaseUrl = "http://www.seattle.gov/trafficcams/images/";
     private String WSDOTBaseUrl = "http://images.wsdot.wa.gov/nw/";
     private TrafficCamera[] trafficCameras;
-    private Listener listener;
+    private Context context;
+    private ClickListener clickListener ;
+    private LongClickListener longClickListener;
 
     public SDOTCameraAdapter(TrafficCamera[] trafficCameras) {
         this.trafficCameras = trafficCameras;
@@ -35,30 +37,21 @@ public class SDOTCameraAdapter extends RecyclerView.Adapter<SDOTCameraAdapter.Vi
     public SDOTCameraAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         CardView cardView = (CardView) LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.cardview_recycler, viewGroup, false);
-        return new ViewHolder(cardView);
+        return new ViewHolder(cardView, i);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int pos) {
-        CardView cardView = viewHolder.layout;
-        final Context context = cardView.getContext();
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int pos) {
+        CardView cardView = viewHolder.cameraSelected;
+        Context context = cardView.getContext();
 
         TextView cameraInfo = (TextView)cardView.findViewById(R.id.text_results);
         ImageView imageView = (ImageView)cardView.findViewById(R.id.image_camera);
 
         final TrafficCamera trafficCamera = trafficCameras[pos];
-        cameraInfo.setText(trafficCamera.getDescription());
 
+        cameraInfo.setText(trafficCamera.getDescription());
         Picasso.get().load(trafficCamera.getImageUrl()).into(imageView);
-        cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (listener != null) {
-                    listener.onClick(pos);
-                    trafficCamera.viewCoordinatesString(MainActivity.getTextLocation());
-                }
-            }
-        });
     }
 
     @Override
@@ -82,16 +75,56 @@ public class SDOTCameraAdapter extends RecyclerView.Adapter<SDOTCameraAdapter.Vi
 
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private CardView layout;
+    public class ViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnLongClickListener {
 
-        public ViewHolder(CardView v) {
-            super(v);
-            layout = v;
+        private CardView cameraSelected;
+        private int position;
+
+        public ViewHolder(View itemView, int position) {
+            super(itemView);
+            cameraSelected = itemView.findViewById(R.id.card_view);
+            this.position = position;
+
+            if (clickListener != null) {
+                itemView.setOnClickListener(this);
+            }
+            if (longClickListener != null) {
+                itemView.setOnLongClickListener(this);
+            }
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (clickListener != null) {
+                position = getAdapterPosition();
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            if (longClickListener != null) {
+                position = getAdapterPosition();
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
-    interface Listener {
-        void onClick(int pos);
+    public void setOnItemClickListener(ClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
+
+    public void setOnLongItemClickListener(LongClickListener longItemClickListener) {
+        this.longClickListener = longItemClickListener;
+    }
+
+    public interface ClickListener {
+        void onItemClick(int pos, View v);
+    }
+
+    public interface LongClickListener {
+        void onItemLongClick(int position, View v);
     }
 }

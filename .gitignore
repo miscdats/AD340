@@ -14,3 +14,6 @@ gradle.properties
 /*/build
 /*/*/build
 /*/captures
+
+# googleszes
+google_maps_api_key.xml

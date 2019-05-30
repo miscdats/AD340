@@ -112,19 +112,19 @@ public class SDOTCameraAdapter extends RecyclerView.Adapter<SDOTCameraAdapter.Vi
         }
     }
 
-    public void setOnItemClickListener(ClickListener clickListener) {
+    public void setOnClickListener(ClickListener clickListener) {
         this.clickListener = clickListener;
     }
 
-    public void setOnLongItemClickListener(LongClickListener longItemClickListener) {
+    public void setOnLongClickListener(LongClickListener longItemClickListener) {
         this.longClickListener = longItemClickListener;
     }
 
     public interface ClickListener {
-        void onItemClick(int pos, View v);
+        void onClick(int pos, View v);
     }
 
     public interface LongClickListener {
-        void onItemLongClick(int position, View v);
+        void onLongClick(int position, View v);
     }
 }

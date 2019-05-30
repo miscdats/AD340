@@ -1,12 +1,18 @@
 package com.example.deya.seawatch;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,16 +23,30 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
-        LoaderManager.LoaderCallbacks<String> {
+        LoaderManager.LoaderCallbacks<String>, OnMapReadyCallback {
 
     private static final String TAG = "MAIN_ACTIVITY : ";
     static TextView textLocation;
     static Context context;
     private SDOTCameraAdapter cameraAdapter;
+    private FusedLocationProviderClient mLocationClient;
+    private boolean mLocationPermissionGranted = false;
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +56,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textLocation = (TextView)findViewById(R.id.text_location);
         Button button = findViewById(R.id.btn_data_get);
         button.setOnClickListener(this);
+
+        mLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        SupportMapFragment mapFragment
+                = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map_fragment);
     }
 
     /**
@@ -84,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             // create list of all data in object
             final TrafficCamera[] trafficCameras = new TrafficCamera[features.length()];
+
             for (int i = 0; i < features.length(); i++) {
                 JSONObject current = features.getJSONObject(i);
 
@@ -107,24 +133,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(linearLayoutManager);
+
             // lay it all out in recycler view
             cameraAdapter = new SDOTCameraAdapter(trafficCameras);
             recyclerView.setAdapter(cameraAdapter);
 
             // click on item shows coordinates
-            cameraAdapter.setOnItemClickListener(new SDOTCameraAdapter.ClickListener() {
+            cameraAdapter.setOnClickListener(new SDOTCameraAdapter.ClickListener() {
                 @Override
-                public void onItemClick(int pos, View view) {
+                public void onClick(int pos, View view) {
                     trafficCameras[recyclerView.getChildAdapterPosition(view)]
                             .viewCoordinatesString(textLocation);
                 }
             });
 
             // long click on item sends position to log
-            cameraAdapter.setOnLongItemClickListener(new SDOTCameraAdapter.LongClickListener() {
+            cameraAdapter.setOnLongClickListener(new SDOTCameraAdapter.LongClickListener() {
                 @Override
-                public void onItemLongClick(int position, View v) {
-                    Log.d(TAG, "onItemLongClick pos = " + position);
+                public void onLongClick(int position, View v) {
+                    Log.d(TAG, "onLongClick pos = " + position);
                 }
             });
 
@@ -142,4 +169,76 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return textLocation;
     }
 
+    @SuppressLint("MissingPermission")
+    private void getLocation() {
+
+        if (mLocationPermissionGranted) {
+            try {
+                Task location = mLocationClient.getLastLocation();
+
+                location.addOnCompleteListener(new OnCompleteListener<Location>() {
+
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        Location actualLocation = task.getResult();
+
+                        if (actualLocation != null) {
+                            String latlong = String.format("Lat: %f, Long: %f",
+                                    actualLocation.getLatitude(),
+                                    actualLocation.getLongitude());
+                            mMap.setMyLocationEnabled(true);
+                            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+                            // Update the map
+                            LatLng here = new LatLng(actualLocation.getLatitude(),
+                                    actualLocation.getLongitude());
+                            mMap.addMarker(new MarkerOptions().position(here).title("WHERE I BE"));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(here, 10));
+                            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+
+                        } else {
+                            Log.e(TAG, "Location is null ...");
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                Log.e(TAG, e.getLocalizedMessage());
+            }
+        }
+    }
+
+    private void getLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[] { Manifest.permission.ACCESS_COARSE_LOCATION },
+                    1);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        mLocationPermissionGranted = false;
+        switch (requestCode) {
+            // requestCode: request ID
+            case 1: {
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
+                    getLocation();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        getLocationPermission();
+        getLocation();
+    }
 }

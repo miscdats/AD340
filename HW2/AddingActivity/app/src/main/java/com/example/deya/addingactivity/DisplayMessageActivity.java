@@ -27,10 +27,12 @@ public class DisplayMessageActivity extends Activity {
         String message = count + "";
         // display number
         numView.setText(message);
+        Log.i(TAG, " finished.");
     }
 
 
     private int plusOne(String userNumber) {
+        Log.i(TAG, " adding.");
         // gets user string into int and adds up one
         return Integer.parseInt(userNumber) + 1;
     }

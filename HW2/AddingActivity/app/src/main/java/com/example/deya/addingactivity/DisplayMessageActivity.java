@@ -13,7 +13,7 @@ public class DisplayMessageActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
-        Log.i(TAG, " started.");
+        Log.i(TAG, " created.");
 
         // intent passed in
         Intent intent = getIntent();
@@ -36,5 +36,40 @@ public class DisplayMessageActivity extends Activity {
         // gets user string into int and adds up one
         return Integer.parseInt(userNumber) + 1;
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, " started.");
+    }
+
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG, " restarted.");
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, " resumed.");
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, " paused.");
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, " destroyed.");
+    }
+
 
 }

@@ -40,7 +40,7 @@ public class HostActivity extends AppCompatActivity implements MainFragment.OnNe
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         MainFragment fragment = new MainFragment();
-        fragmentTransaction.add(R.id.fragment_main_tv, fragment);
+        fragmentTransaction.add(R.id.fragment_host, fragment);
         fragmentTransaction.commit();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

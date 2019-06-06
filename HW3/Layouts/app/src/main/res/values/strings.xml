@@ -6,5 +6,15 @@
     <string name="toast2">Toaster</string>
     <string name="toast3">Butter (optional)</string>
     <string name="toasting">This is an ingredient for toast!!!</string>
-    <string name="title">Movies</string>
+    <string name="toasting1">This is also nice but not necessary.</string>
+    <string name="toasting2">You really need this.</string>
+
+
+    <string name="page_title">Movies</string>
+
+    <string name="title">Title: </string>
+    <string name="year">Year: </string>
+    <string name="director">Director: </string>
+    <string name="image">movie poster</string>
+    <string name="synopsis">Synopsis: </string>
 </resources>

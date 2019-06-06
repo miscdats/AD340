@@ -2,102 +2,107 @@ package com.example.deya.layouts;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.List;
-
+/**
+ * Recycle view adapter fit for displaying custom Movie objects.
+ */
 public class ReViewAdapter extends RecyclerView.Adapter<ReViewAdapter.ViewHolder> {
-    private List<String>    rvData;
-    private LayoutInflater  rvInflater;
-    private ItemClickListener rvClickListener;
+
+    private Movie[] movies;
 
     /**
      * Constructor.
-     * @param context
-     * @param data
      */
-    ReViewAdapter(Context context, List<String> data) {
-        this.rvInflater = LayoutInflater.from(context);
-        this.rvData = data;
+    public ReViewAdapter(Movie[] movies) {
+        this.movies = movies;
     }
 
     /**
      * Inflates the row layout from xml as needed.
+     *
      * @param parent
      * @param viewType
-     * @return
+     * @return new viewholder for cardview
      */
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = rvInflater.inflate(R.layout.recycler_view_item, parent, false);
-        return new ViewHolder(view);
+    public ReViewAdapter.ViewHolder onCreateViewHolder(
+            ViewGroup parent, int viewType) {
+
+        CardView cardView = (CardView) LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.card_recycler_item, parent, false);
+        return new ViewHolder(cardView);
     }
 
     /**
      * Binds the data for row to the TextView using its position
-     * @param viewHolder
-     * @param pos
+     *
+     * @param holder
+     * @param position
      */
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int pos) {
-        String movie = rvData.get(pos);
-        viewHolder.rvTextView.setText(movie);
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        CardView cardView = holder.layout;
+        TextView title = (TextView) cardView.findViewById(R.id.card_title);
+        TextView year = (TextView) cardView.findViewById(R.id.card_year);
+
+        Context context = cardView.getContext();
+
+        // take position of movies and get movie
+        Movie movie = movies[position];
+
+        // get details for that movie and set in views
+        title.setText(movie.getTitle());
+        year.setText(movie.getYear());
+
+        // listener
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onClick(position);
+                }
+            }
+        });
     }
 
     /**
      * Finds the size of the data
+     *
      * @return total number of rows
      */
     @Override
     public int getItemCount() {
-        return rvData.size();
+        return movies.length;
+    }
+
+    // listener set to stun
+    private Listener listener;
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
+    interface Listener {
+        void onClick(int position);
     }
 
     /**
      * Holds views to be recycled as they go off-screen
      */
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView rvTextView;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private CardView layout;
 
-        ViewHolder(View itemView) {
-            super(itemView);
-            rvTextView = itemView.findViewById(R.id.movieTitleView);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (rvClickListener != null) rvClickListener.onItemClick(view, getAdapterPosition());
+        public ViewHolder(CardView v) {
+            super(v);
+            layout = v;
         }
     }
 
-    /**
-     * Gets ID of the clicked position
-     * @param posId
-     * @return String int id
-     */
-    private String getItem(int posId) {
-        return rvData.get(posId);
-    }
-
-    /**
-     * listens for click, is grabbed event
-     * @param itemClickListener
-     */
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.rvClickListener = itemClickListener;
-    }
-
-    /**
-     * interface for when there are clicks to respond to
-     * implementation will grab view and position
-     */
-    public interface ItemClickListener {
-        void onItemClick(View view, int pos);
-    }
 }

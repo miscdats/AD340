@@ -14,8 +14,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,9 +28,6 @@ import com.google.android.gms.tasks.Task;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-
-import static android.widget.Toast.LENGTH_LONG;
-import static android.widget.Toast.makeText;
 
 
 public class MappedOut extends FragmentActivity implements OnMapReadyCallback {
@@ -52,14 +47,6 @@ public class MappedOut extends FragmentActivity implements OnMapReadyCallback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_mapped_out);
-
-        GoogleApiAvailability availability = GoogleApiAvailability.getInstance();
-        int result = availability.isGooglePlayServicesAvailable(this);
-        if (result != ConnectionResult.SUCCESS) {
-            if (!availability.isUserResolvableError(result)) {
-                makeText(this, ERROR_MSG, LENGTH_LONG).show();
-            }
-        }
 
         // Location of client
         mLocationClient = LocationServices.getFusedLocationProviderClient(this);

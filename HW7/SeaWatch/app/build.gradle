@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.deya.seawatch"
+        applicationId "dev.taupier.android.seawatch"
         minSdkVersion 22
         targetSdkVersion 28
         versionCode 1
@@ -38,5 +38,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:16.0.0'
 
     // Adds Google Maps
-    implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
 }
